@@ -137,6 +137,88 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-Python-Ctypes-and-Numpy" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2020/08/26/Python-Ctypes-and-Numpy/">Python: Ctypes and Numpy</a>
+    </h1>
+  
+
+        
+        <a href="/2020/08/26/Python-Ctypes-and-Numpy/" class="archive-article-date">
+  	<time datetime="2020-08-26T01:53:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2020-08-26</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>Suppose there is a C function</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// array can be double or int, depending on format</span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">traceRect</span><span class="params">(<span class="keyword">void</span> *<span class="built_in">array</span>, <span class="keyword">int</span> format)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>If use python builtin list, then it will be something like this</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">array:	List[float]	= ...</span><br><span class="line">temp:			= (c_double * size)(*array)  <span class="comment"># copy from array to temp</span></span><br><span class="line"></span><br><span class="line">dll.traceRect(temp, c_int(<span class="number">0</span>))</span><br></pre></td></tr></table></figure>
+
+<p>It can be noticed that a massive copying will waste a lot of time in <code>(c_double * size)(*array)</code>,<br>and considering that fact that it is needed to copy back to <code>array</code> after C operation,<br>entire operation time will be unacceptable</p>
+<p>Using numpy can prevent the copying as it provide a function <code>ndarray.ctypes.data_as</code> to pass the data pointer<br>to let ctypes to handle</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> ctypes</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"></span><br><span class="line">array:	np.ndarray	= ...</span><br><span class="line">dll:	CDLL		= ...</span><br><span class="line"></span><br><span class="line">dll.traceRect(array.ctypes.data_as(c_void_p), c_int(<span class="number">0</span>))</span><br></pre></td></tr></table></figure>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">python,ctypes,numpy</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2020/08/26/Python-Ctypes-and-Numpy/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-Hello-World" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -287,6 +369,10 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
             <input type="checkbox" q-on="click:toggleTag(e)" q-attr="checked:showTags">
           </label>
           <ul class="article-tag-list" q-show="showTags">
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">python,ctypes,numpy</a>
+              </li>
             
             <div class="clearfix"></div>
           </ul>
